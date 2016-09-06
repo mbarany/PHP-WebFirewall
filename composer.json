@@ -1,0 +1,13 @@
+{
+    "require": {
+        "silex/silex": "^2.0",
+        "twig/twig": "^1.24",
+        "symfony/twig-bridge": "^3.1",
+        "ramsey/uuid": "^3.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Barany\\": "src/"
+        }
+    }
+}

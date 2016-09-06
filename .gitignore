@@ -1,0 +1,8 @@
+# Excludes
+.idea
+*.iml
+vendor
+dist/*
+
+# Overrides
+!.gitkeep

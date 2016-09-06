@@ -1,0 +1,131 @@
+{% extends 'layout.html.twig' %}
+
+{% block js %}
+    <script type="text/javascript">
+        function hideStatus(s) {
+            if(s > 0) {
+                $('#status_seconds').html(s + ' second' + (s > 1 ? 's' : ''));
+                return setTimeout("hideStatus(" + (s - 1) + ");", 1000);
+            } else {
+                $('#status').slideUp(1000);
+            }
+        }
+
+        (function () {
+            var $form = $('form');
+
+            $('.js-copy-ip').on('click', function (e) {
+                var ip = $('.js-current-ip').text();
+                e.preventDefault();
+                $form.find('[name="host"]').val(ip);
+            });
+
+            $form.on('submit', function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/api/firewall/rules',
+                    method: 'POST',
+                    data: $form.serialize()
+                }).then(function () {
+                    location.href = '?flag';
+                });
+            });
+
+            $('.js-delete-rule').on('click', function (e) {
+                var $el = $(e.currentTarget);
+                e.preventDefault();
+                $.ajax({
+                    url: '/api/firewall/rules/' + $el.data('id'),
+                    method: 'DELETE'
+                }).then(function () {
+                    location.href = '?flag';
+                });
+            });
+
+            {% if applyTime > 0 %}
+                hideStatus({{ applyTime }});
+            {% endif %}
+        })();
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div id="menubar" style="background:#000044; color:#FF3300;">
+        <div style="margin-left:auto; margin-right:auto; width:800px;">
+            <div style="float:left; padding:2px;">
+                <h1>Firewall Web Interface</h1>
+            </div>
+            <div style="float:right;">
+                <a href="/logout">Logout</a>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+
+    <div style="margin-left:auto; margin-right:auto; width:800px;">
+        {% if applyTime > 0 %}
+            <div id="status" style="background:#FFAA00; color:#000044; text-align:center;">
+                <h2>Firewall service is reloading in <span id="status_seconds">{{ applyTime }} seconds</span>.</h2>
+            </div>
+        {% endif %}
+        <br />
+        <div style="text-align:center;">
+            <h2>Your IP Address is: <b class="js-current-ip">{{ ip }}</b></h2>
+            <a href="#" class="js-copy-ip">Copy IP</a>
+        </div>
+        <br />
+
+        <form>
+            <table border="1" style="width:100%;">
+                <tr><td colspan="4" style="background:#000044; color:#FF3300;"><h3>Add</h3></td></tr>
+                <tr style="font-weight:bold;">
+                    <th>Description</th>
+                    <th>IP Address/Domain Name</th>
+                    <th>Services</th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td><input type="text" name="description" size="40"></td>
+                    <td><input type="text" name="host" size="20"></td>
+                    <td>
+                        <select name="service">
+                            <option value="all">All</option>
+                            <option value="ftp">FTP</option>
+                            <option value="ssh">SSH</option>
+                        </select>
+                    </td>
+                    <td><input type="submit" value="Add"></td>
+                </tr>
+            </table>
+        </form>
+
+        {% if rules|length > 0 %}
+            <br>
+            <table border="1" cellpadding="6" cellspacing="0" width="800" align="center">
+                <tr>
+                    <td colspan="4" style="background:#000044; color:#FF3300;"><h3>Current Rules</h3></td>
+                </tr>
+                <tr style="font-weight:bold;">
+                    <th>Description</th>
+                    <th>IP Address/Domain Name</th>
+                    <th>Services</th>
+                    <th></th>
+                </tr>
+                {% for id, rule in rules %}
+                    <tr>
+                        <td>{{ rule.description }}</td>
+                        <td>{{ rule.host }}</td>
+                        <td>{{ rule.type }}</td>
+                        <td>
+                            <input type="button"
+                                   value="Delete"
+                                   data-id="{{ id }}"
+                                   class="js-delete-rule"
+                            >
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}
