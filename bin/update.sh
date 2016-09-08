@@ -16,4 +16,4 @@ if [ ! -f "$iptables_rules" ]; then
     chmod 0777 $iptables_rules
 fi
 
-echo "* * * * * root $SCRIPTPATH/../scripts/crontab.sh d> /dev/null 2>&1" > /etc/cron.d/PHP-WebFirewall
+echo "* * * * * root $SCRIPTPATH/../scripts/crontab.sh > /dev/null 2>&1" > /etc/cron.d/PHP-WebFirewall

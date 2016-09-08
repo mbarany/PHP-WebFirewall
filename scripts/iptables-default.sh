@@ -41,4 +41,4 @@ iptables -A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables Packet 
 iptables -A LOGGING -j DROP
 
 # Save the rules for server restarts
-iptables-save
+$(iptables-save)

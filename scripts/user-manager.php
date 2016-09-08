@@ -38,4 +38,4 @@ switch ($argv[1]) {
         break;
 }
 
-echo 'GoodBye.';
+echo 'GoodBye.' . "\n";

@@ -23,7 +23,7 @@
             $form.on('submit', function (e) {
                 e.preventDefault();
                 $.ajax({
-                    url: '/api/firewall/rules',
+                    url: '{{ basePath }}/api/firewall/rules',
                     method: 'POST',
                     data: $form.serialize()
                 }).then(function () {
@@ -35,7 +35,7 @@
                 var $el = $(e.currentTarget);
                 e.preventDefault();
                 $.ajax({
-                    url: '/api/firewall/rules/' + $el.data('id'),
+                    url: '{{ basePath }}/api/firewall/rules/' + $el.data('id'),
                     method: 'DELETE'
                 }).then(function () {
                     location.href = '?flag';
@@ -56,7 +56,7 @@
                 <h1>Firewall Web Interface</h1>
             </div>
             <div style="float:right;">
-                <a href="/logout">Logout</a>
+                <a href="{{ path('logout') }}">Logout</a>
             </div>
             <div style="clear:both;"></div>
         </div>

@@ -31,31 +31,32 @@ $app->match('/login', function (Request $request) use ($app) {
         $users = $app['dataStore']->get('users', []);
         if (isset($users[$user]) && password_verify($pass, $users[$user])) {
             $app['session']->set('user', $user);
-            return $app->redirect('/');
+            return $app->redirect($app['url_generator']->generate('home'));
         }
         $loginError = true;
     }
     return $app['twig']->render('login.html.twig', [
         'loginError' => $loginError
     ]);
-})->method('GET|POST');
+})->method('GET|POST')->bind('login');
 
 $app->get('/logout', function () use ($app) {
     $app['session']->remove('user');
-    return $app->redirect('/login');
-});
+    return $app->redirect($app['url_generator']->generate('login'));
+})->bind('logout');
 
 $app->get('/', function (Request $request) use ($app) {
     if (!$app['session']->get('user')) {
-        return $app->redirect('/login');
+        return $app->redirect($app['url_generator']->generate('login'));
     }
     $showApplyTime = $request->query->has('flag');
     return $app['twig']->render('index.html.twig', [
+        'basePath' => $request->getBasePath(),
         'ip' => $request->getClientIp(),
         'rules' => $app['ipTablesManager']->getAllRules(),
         'applyTime' => $showApplyTime ? 60 - intval(date("s")) : NULL,
     ]);
-});
+})->bind('home');
 
 // API Routes
 
