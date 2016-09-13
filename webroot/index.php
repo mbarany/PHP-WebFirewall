@@ -7,6 +7,9 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 $app = new Silex\Application();
 
+// App Debugging
+$app['debug'] = getenv('DEBUG') == '1';
+
 // Session
 $app->register(new Silex\Provider\SessionServiceProvider());
 // Use Twig Templates
@@ -21,7 +24,9 @@ $app['ipTablesManager'] = new Barany\WebFirewall\IpTablesManager($app['dataStore
     'chainName' => 'WEB-FIREWALL',
 ]);
 
-// Routes
+/**
+ * Routes
+ */
 
 $app->match('/login', function (Request $request) use ($app) {
     $loginError = false;

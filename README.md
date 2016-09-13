@@ -1,18 +1,24 @@
 # PHP-WebFirewall
-Small PHP App to interface with Linux iptables
+Small PHP App to interface with Linux iptables. It uses the Silex micro-framework.
 
-## Install / Update
-- Install Dependencies
+## Install
+1. Clone this repo
+1. Install Dependencies `composer install`
+1. Tweak `scripts/iptables-default.sh` to your liking and run it `sudo ./scripts/iptables-default.sh`
+1. Run Install/Update script `sudo ./bin/update`
+1. Setup webserver webroot to point to `webroot`
+1. Add a User `php ./scripts/user-manager.php add michael`
+
+## Development / Testing
+You can use the PHP built-in server
 ```bash
-composer install
+php -S localhost:8000 -t "webroot/" -d "date.timezone=America/New_York"
 ```
-- Add a User
+To enable Silex App debugging set the following environment variable `DEBUG=1`
 ```bash
-php ./scripts/user-manager.php add michael
+DEBUG=1 php -S localhost:8000 -t "webroot/" -d "date.timezone=America/New_York"
 ```
-- Run Install/Update script
-```bash
-sudo ./bin/update
-```
-- Setup webroot to point to `webroot`
-- Tweak `scripts/iptables-default.sh` to your liking and run it
+
+## Update
+1. Pull in latest changes from Github `git pull origin master`
+1. Run Install/Update script `sudo ./bin/update`
